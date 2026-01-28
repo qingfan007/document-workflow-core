@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Create Document</title>
+</head>
+<body>
+
+<!-- ===== User Bar ===== -->
+<div>
+    Logged in as:
+    <strong sec:authentication="name"></strong>
+    |
+    Roles:
+    <span sec:authentication="authorities"></span>
+
+    <form th:action="@{/logout}" method="post"
+          style="display:inline; margin-left:10px;">
+        <button type="submit">Logout</button>
+    </form>
+</div>
+
+<hr/>
+
+<h1>Create Document (Draft)</h1>
+
+<form th:action="@{/documents}" method="post" th:object="${form}">
+    <div>
+        <label>Title</label><br/>
+        <input type="text" th:field="*{title}" required/>
+    </div>
+
+    <div>
+        <label>Type</label><br/>
+        <select th:field="*{type}" required>
+            <option value="" disabled selected>-- Select type --</option>
+            <option th:each="t : ${types}"
+                    th:value="${t}"
+                    th:text="${t}">
+            </option>
+        </select>
+    </div>
+
+    <div>
+        <label>Amount</label><br/>
+        <input type="number" step="0.01" th:field="*{amount}" required/>
+    </div>
+
+    <br/>
+    <button type="submit">Create Draft</button>
+</form>
+
+<br/>
+<a href="/documents">Back</a>
+
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Document Detail</title>
+</head>
+<body>
+
+<!-- ===== User Bar ===== -->
+<div>
+    Logged in as:
+    <strong sec:authentication="name"></strong>
+    |
+    Roles:
+    <span sec:authentication="authorities"></span>
+
+    <form th:action="@{/logout}" method="post"
+          style="display:inline; margin-left:10px;">
+        <button type="submit">Logout</button>
+    </form>
+</div>
+
+<hr/>
+
+<h1>Document Detail</h1>
+
+<p><strong>ID:</strong> <span th:text="${document.id}"></span></p>
+<p><strong>Title:</strong> <span th:text="${document.title}"></span></p>
+<p><strong>Type:</strong> <span th:text="${document.type}"></span></p>
+<p><strong>Amount:</strong> <span th:text="${document.amount}"></span></p>
+<p><strong>Status:</strong> <span th:text="${document.status}"></span></p>
+<p><strong>Created By:</strong> <span th:text="${document.createdBy}"></span></p>
+
+<hr/>
+
+<!-- =========================
+     DRAFT: CREATOR only
+========================= -->
+<div sec:authorize="hasRole('CREATOR')"
+     th:if="${document.status.name() == 'DRAFT'}">
+    <h3>Draft Actions (Creator)</h3>
+
+    <a th:href="@{/documents/{id}/edit(id=${document.id})}">Edit Draft</a>
+
+    <form th:action="@{/documents/{id}/submit(id=${document.id})}"
+          method="post" style="margin-top:10px;">
+        <button type="submit">Submit for Review</button>
+    </form>
+</div>
+
+<!-- =========================
+     SUBMITTED -> UNDER_REVIEW: REVIEWER only
+========================= -->
+<div sec:authorize="hasRole('REVIEWER')"
+     th:if="${document.status.name() == 'SUBMITTED'}">
+    <h3>Review Actions (Reviewer)</h3>
+
+    <form th:action="@{/documents/{id}/review(id=${document.id})}" method="post">
+        <textarea name="reasonOrNote" placeholder="Review note (optional)"></textarea><br/>
+        <button type="submit">Move to UNDER_REVIEW</button>
+    </form>
+</div>
+
+<!-- =========================
+     UNDER_REVIEW: split by role
+========================= -->
+
+<!-- Reviewer: request changes -->
+<div sec:authorize="hasRole('REVIEWER')"
+     th:if="${document.status.name() == 'UNDER_REVIEW'}">
+    <h3>Reviewer Actions</h3>
+
+    <form th:action="@{/documents/{id}/request-changes(id=${document.id})}"
+          method="post">
+        <textarea name="reasonOrNote"
+                  placeholder="Change request reason" required></textarea><br/>
+        <button type="submit">Request Changes (Back to Draft)</button>
+    </form>
+</div>
+
+<!-- Approver: approve/reject -->
+<div sec:authorize="hasRole('APPROVER')"
+     th:if="${document.status.name() == 'UNDER_REVIEW'}">
+    <h3>Approver Decision</h3>
+
+    <form th:action="@{/documents/{id}/approve(id=${document.id})}" method="post">
+        <button type="submit">Approve</button>
+    </form>
+
+    <form th:action="@{/documents/{id}/reject(id=${document.id})}" method="post">
+        <textarea name="reasonOrNote"
+                  placeholder="Rejection reason" required></textarea><br/>
+        <button type="submit">Reject</button>
+    </form>
+</div>
+
+<!-- =========================
+     APPROVED/REJECTED -> ARCHIVED: APPROVER only
+========================= -->
+<div sec:authorize="hasRole('APPROVER')"
+     th:if="${document.status.name() == 'APPROVED'
+          || document.status.name() == 'REJECTED'}">
+    <h3>Finalization (Approver)</h3>
+
+    <form th:action="@{/documents/{id}/archive(id=${document.id})}" method="post">
+        <button type="submit">Archive Document</button>
+    </form>
+</div>
+
+<hr/>
+<a href="/documents">Back to list</a>
+
+</body>
+</html>
