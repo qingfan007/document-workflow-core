@@ -1,8 +1,13 @@
-# Document Core Demo
+# Document Workflow Demo
 
 ## Overview
 
-This project demonstrates how a **document-centric system** can be designed and implemented in a way that is **structured, auditable, and safe to evolve**.
+This project is a small engineering experiment that demonstrates how a
+**document-centric system** can be designed and implemented in a way that is
+**structured, auditable, and safe to evolve**.
+
+The goal is not to define a universal architecture,
+but to explore what happens when a system is built strictly around a clearly identified domain core.
 
 It is **not a product** and does not focus on UI polish.  
 The purpose of this demo is to show how complex business systems can be organized around a clear **domain core** with strict rules enforced on the backend.
@@ -34,6 +39,9 @@ Every change must follow explicit rules and transitions.
 ## Domain Core: Document
 
 The entire system is organized around a single domain core: **Document**.
+
+Document is not presented as a universal solution.  
+It is simply how the domain core manifested in this particular experiment.
 
 Everything else exists to support the document lifecycle:
 - Users interact with documents
@@ -110,6 +118,11 @@ It demonstrates:
 
 The same structure can be applied to many real-world systems that require correctness, control, and accountability.
 
+This demo does not suggest that all systems should follow this structure.
+
+Instead, it shows how identifying and protecting a domain core
+can simplify decision-making and reduce accidental complexity,
+regardless of system type.
 ---
 
 ## Notes
