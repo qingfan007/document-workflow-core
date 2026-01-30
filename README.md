@@ -123,6 +123,7 @@ This demo does not suggest that all systems should follow this structure.
 Instead, it shows how identifying and protecting a domain core
 can simplify decision-making and reduce accidental complexity,
 regardless of system type.
+
 ---
 
 ## Notes
